@@ -1,0 +1,5 @@
+- [x] MCAP 2 Protobuf Messages
+- [ ] Protobuf Message localhost testing w UDP
+  - [ ] with generated messages from MCAP
+- [ ] localhost testing with virtual CAN
+  - [ ] with MCAP data
