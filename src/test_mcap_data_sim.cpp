@@ -1,7 +1,3 @@
-// Example code for reading Protobuf messages from an MCAP file. Uses the proto definition
-// from within the MCAP, with no dependency on generated headers.
-// Try it out by generating some PointCloud messages with the protobuf writer example,
-// and running this executable with the resulting MCAP file.
 #define MCAP_IMPLEMENTATION
 #include <google/protobuf/descriptor.pb.h>
 #include <google/protobuf/descriptor_database.h>
@@ -10,7 +6,7 @@
 #include <google/protobuf/reflection.h>
 #include <google/protobuf/message.h>
 
-#include "mcap/reader.hpp"
+#include "../mcap/reader.hpp"
 #include <memory>
 #include <iostream>
 #include <vector>
