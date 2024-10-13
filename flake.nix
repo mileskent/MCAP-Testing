@@ -1,35 +1,43 @@
 {
-  description = "lab 3 flake";
+  description = "MCAP Testing Flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     utils.url = "github:numtide/flake-utils";
+    nebs-packages.url = "github:RCMast3r/nebs_packages";
+    nebs-packages.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, utils }: 
+  outputs = { self, nixpkgs, utils, nebs-packages }: 
   let 
     system = "x86_64-linux";
 
-    lab3_overlay = final: prev: {
-      lab3 = final.callPackage ./default.nix { };
+    # Overlay to include test_mcap from default.nix
+    test_mcap_overlay = final: prev: {
+      test_mcap = final.callPackage ./default.nix {};
     };
-    my_overlays = [ lab3_overlay ];
 
+    # List of overlays, including nebs-packages
+    my_overlays = [ test_mcap_overlay nebs-packages.overlays.default ];
+
+    # Define the package set
     pkgs = import nixpkgs {
-      system = "x86_64-linux";
-      overlays = [ self.overlays.default ];
-    };  
+      inherit system;
+      overlays = my_overlays;
+    };
   in
   {      
-    packages.x86_64-linux.default = pkgs.lab3;
+    packages.${system}.default = pkgs.test_mcap;
+
     overlays.default = nixpkgs.lib.composeManyExtensions my_overlays;
 
-    legacyPackages.x86_64-linux =
+    legacyPackages.${system} =
     import nixpkgs {
       inherit system;
       overlays = [
-        (final: _: { lab3 = final.callPackage ./default.nix { }; })
-      ];
+        (final: _: { test_mcap = final.callPackage ./default.nix {}; })
+        nebs-packages.overlays.default
+      ] ++ my_overlays;
     };
   };
 }

@@ -1,10 +1,17 @@
-{ stdenv, cmake, protobuf, lz4, zstd, abseil-cpp }:
+{ stdenv, cmake, protobuf, lz4, zstd, abseil-cpp, mcap }:
 
 stdenv.mkDerivation rec {
-  pname = "hub";
+  pname = "test_mcap_data_sim";
   version = "0.1.0";
   src = ./.;
-  nativeBuildInputs = [ cmake ];
-  buildInputs = [ protobuf lz4 zstd ];
   
+  nativeBuildInputs = [ cmake ];
+  
+  buildInputs = [
+    protobuf
+    lz4
+    zstd
+    abseil-cpp
+    mcap
+  ];
 }
