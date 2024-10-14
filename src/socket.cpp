@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cstring>
-#include "Hub.hpp"
+#include "socket.hpp"
 
-Hub::Hub(std::string server_ip, uint16_t port){
+Socket::Socket(std::string server_ip, uint16_t port){
 	if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
 		exit(1);
 	}
@@ -14,7 +14,7 @@ Hub::Hub(std::string server_ip, uint16_t port){
 	sAddr.sin_port = htons(port);
 }
 
-bool Hub::send(data::info message, bool returning){
+bool Socket::send(data::info message, bool returning){
 	std::string serialized;
 	if(!message.SerializeToString(&serialized)){
 		return false;
@@ -34,7 +34,7 @@ bool Hub::send(data::info message, bool returning){
 	return true;
 }
 
-bool Hub::receive(data::info& message){
+bool Socket::receive(data::info& message){
 	const int bufferSize = 1024;
 	socklen_t addrlen = sizeof(remaddr);      
 
@@ -54,11 +54,11 @@ bool Hub::receive(data::info& message){
 	return true;
 }
 
-void Hub::close(){
+void Socket::close(){
 	::close(fd);
 }
 
-bool Hub::bind(){
+bool Socket::bind(){
 	if (::bind(fd, (struct sockaddr *)&sAddr, sizeof(sAddr)) < 0) {
 		return false;
 	}

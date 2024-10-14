@@ -52,11 +52,11 @@ target_link_libraries(data PUBLIC protobuf::libprotobuf)
 target_link_libraries(hub PUBLIC data)
 
 # Add the server executable DONT DO THIS use targets include
-add_executable(server app/serverMain.cpp)
+add_executable(server app/server.cpp)
 target_link_libraries(server PUBLIC hub)
 
 # Add the client executable
-add_executable(client app/clientMain.cpp )
+add_executable(client app/client.cpp )
 target_link_libraries(client PUBLIC hub)
 
 #install targets!!
