@@ -1,10 +1,9 @@
 #include <iostream>
 #include <cstring>
-#include "Hub.hpp"
+#include "Socket.hpp"
 
-Hub::Hub(std::string server_ip, uint16_t port){
+Socket::Socket(std::string server_ip, uint16_t port){
 	if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-		std::cout << "socket not work!?" << std::endl;
 		exit(1);
 	}
 
@@ -15,22 +14,19 @@ Hub::Hub(std::string server_ip, uint16_t port){
 	sAddr.sin_port = htons(port);
 }
 
-bool Hub::send(data::info message, bool returning){
+bool Socket::send(data::info message, bool returning){
 	std::string serialized;
 	if(!message.SerializeToString(&serialized)){
-		std::cout << "no serialize!?" << std::endl;
 		return false;
 	}
 
 	if(returning){
 		if (sendto(fd, serialized.data(), serialized.size(), 0, (struct sockaddr *)&remaddr, sizeof(sAddr)) < 0){
-			std::cout << "no send!?" << std::endl;
 			return false;
 		}
 	}
 	else{
 		if (sendto(fd, serialized.data(), serialized.size(), 0, (struct sockaddr *)&sAddr, sizeof(sAddr)) < 0){
-			std::cout << "no send!?" << std::endl;
 			return false;
 		}
 	}
@@ -38,36 +34,32 @@ bool Hub::send(data::info message, bool returning){
 	return true;
 }
 
-bool Hub::receive(data::info& message){
+bool Socket::receive(data::info& message){
 	const int bufferSize = 1024;
-	 /* remote address */
-	socklen_t addrlen = sizeof(remaddr);            /* length of addresses */
+	socklen_t addrlen = sizeof(remaddr);      
 
-	unsigned char buf[bufferSize];     /* receive buffer */
+	unsigned char buf[bufferSize];  
 
 	int recvlen = recvfrom(fd, buf, bufferSize, 0, (struct sockaddr *)&remaddr, &addrlen);
 	if(recvlen < 0){
-		std::cout << "no receive!?" << std::endl;
 		return false;
 	} else {
-		std::cout << "recvd data "<< recvlen <<std::endl;
+		std::cout << "recvlen: "<< recvlen << std::endl;
 	}
 
 	if (!message.ParseFromArray(buf, recvlen)) {
-		std::cout << "Failed to parse message" << std::endl;
 		return false;
 	}
 
 	return true;
 }
 
-void Hub::close(){
+void Socket::close(){
 	::close(fd);
 }
 
-bool Hub::bind(){
+bool Socket::bind(){
 	if (::bind(fd, (struct sockaddr *)&sAddr, sizeof(sAddr)) < 0) {
-		std::cout << "bind not work!?" << std::endl;
 		return false;
 	}
 

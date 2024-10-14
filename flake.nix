@@ -8,7 +8,7 @@
     nebs-packages.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, utils, nebs-packages }: 
+  outputs = { self, nixpkgs, utils, nebs-packages, ... }: 
   let 
     system = "x86_64-linux";
 
@@ -18,7 +18,10 @@
     };
 
     # List of overlays, including nebs-packages
-    my_overlays = [ test_mcap_overlay nebs-packages.overlays.default ];
+    my_overlays = [ 
+      test_mcap_overlay
+      nebs-packages.overlays.default
+    ];
 
     # Define the package set
     pkgs = import nixpkgs {
@@ -29,15 +32,17 @@
   {      
     packages.${system}.default = pkgs.test_mcap;
 
-    overlays.default = nixpkgs.lib.composeManyExtensions my_overlays;
+    overlays.default = nixpkgs.lib.composeManyExtensions [
+      nebs-packages.overlays.default
+      test_mcap_overlay
+    ];
+
+    # overlays.default = nixpkgs.lib.composeManyExtensions my_overlays;
 
     legacyPackages.${system} =
     import nixpkgs {
       inherit system;
-      overlays = [
-        (final: _: { test_mcap = final.callPackage ./default.nix {}; })
-        nebs-packages.overlays.default
-      ] ++ my_overlays;
+      overlays = my_overlays;
     };
   };
 }
