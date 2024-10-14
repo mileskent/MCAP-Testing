@@ -47,17 +47,13 @@ target_include_directories(data PUBLIC
     "$<INSTALL_INTERFACE:include>"
 )
 
-#Link the necessary targets 
 target_link_libraries(data PUBLIC protobuf::libprotobuf)
 target_link_libraries(socket PUBLIC data)
 
-# Add the server executable DONT DO THIS use targets include
-add_executable(server app/server.cpp)
+add_executable(server src/server.cpp)
 target_link_libraries(server PUBLIC socket)
 
-# Add the client executable
-add_executable(client app/client.cpp )
+add_executable(client src/client.cpp )
 target_link_libraries(client PUBLIC socket)
 
-#install targets!!
 install(TARGETS server client DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
