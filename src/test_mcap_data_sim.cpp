@@ -59,8 +59,6 @@ int main(int argc, char **argv)
     gp::DescriptorPool protoPool(&protoDb);
     gp::DynamicMessageFactory protoFactory(&protoPool);
 
-    std::cout << "topic\t\ttype\t\t\ttimestamp\t\tfields" << std::endl;
-
     for (auto it = messageView.begin(); it != messageView.end(); it++)
     {
         // skip any non-protobuf-encoded messages.
@@ -103,13 +101,15 @@ int main(int argc, char **argv)
 
         std::vector<const gp::FieldDescriptor *> fields;
         message->GetReflection()->ListFields(*message, &fields);
-        std::cout << it->channel->topic << "\t(" << it->schema->name << ")\t[" << it->message.logTime
-                  << "]:\t{ ";
+        std::cout << "Message channel topic: " << it->channel->topic <<
+            "\nMessage schema name: " << it->schema->name << 
+            "\nMessage Log Time: " << it->message.logTime << std::endl;
+        std::cout << "FIELD NAMES\n";
         for (const auto field : fields)
         {
-            std::cout << field->name() << " ";
+            std::cout << field->name() << "\n";
         }
-        std::cout << "}" << std::endl;
+        break;
     }
     reader.close();
     return 0;
