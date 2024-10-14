@@ -1,19 +1,19 @@
 #include <iostream>
-#include "Socket.hpp"
+#include "Hub.hpp"
 #include "data.pb.h"
 
 int main(){
-    Socket socket(DEFAULT_IP, DEFAULT_PORT);
+    Hub hub(DEFAULT_IP, DEFAULT_PORT);
     data::info message;
     message.set_sender_name("client");
 
-    socket.send(message, false);
+    hub.send(message, false);
 
-    while(!socket.receive(message));
+    while(!hub.receive(message));
 
     std::cout << message.sender_name() << std::endl;
 
-    socket.close();
+    hub.close();
 
     return 0;
 }
