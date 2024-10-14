@@ -6,7 +6,7 @@
 #include <google/protobuf/reflection.h>
 #include <google/protobuf/message.h>
 
-#include <mcap/reader.hpp>
+#include "../mcap/reader.hpp"
 #include <memory>
 #include <iostream>
 #include <vector>

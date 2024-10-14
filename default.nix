@@ -1,4 +1,4 @@
-{ stdenv, cmake, protobuf, lz4, zstd, abseil-cpp, mcap }:
+{ stdenv, cmake, protobuf, lz4, zstd, abseil-cpp }:
 
 stdenv.mkDerivation rec {
   pname = "test_mcap_data_sim";
@@ -12,6 +12,6 @@ stdenv.mkDerivation rec {
     lz4
     zstd
     abseil-cpp
-    mcap
+    # mcap
   ];
 }
