@@ -35,10 +35,10 @@ find_package(Protobuf REQUIRED)
 
 
 # Proto stuff that works when only proto
-add_library(hub src/Hub.cpp)
+add_library(socket src/socket.cpp)
 add_library(data STATIC src/data.pb.cc)
 
-target_include_directories(hub PUBLIC
+target_include_directories(socket PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:include>"
 )
@@ -49,15 +49,15 @@ target_include_directories(data PUBLIC
 
 #Link the necessary targets 
 target_link_libraries(data PUBLIC protobuf::libprotobuf)
-target_link_libraries(hub PUBLIC data)
+target_link_libraries(socket PUBLIC data)
 
 # Add the server executable DONT DO THIS use targets include
 add_executable(server app/server.cpp)
-target_link_libraries(server PUBLIC hub)
+target_link_libraries(server PUBLIC socket)
 
 # Add the client executable
 add_executable(client app/client.cpp )
-target_link_libraries(client PUBLIC hub)
+target_link_libraries(client PUBLIC socket)
 
 #install targets!!
 install(TARGETS server client DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
