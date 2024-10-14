@@ -19,7 +19,6 @@ bool LoadSchema(const mcap::SchemaPtr schema, gp::SimpleDescriptorDatabase *prot
     gp::FileDescriptorSet fdSet;
     if (!fdSet.ParseFromArray(schema->data.data(), static_cast<int>(schema->data.size())))
     {
-        std::cerr << "failed to parse schema data" << std::endl;
         return false;
     }
     gp::FileDescriptorProto unused;
@@ -30,7 +29,6 @@ bool LoadSchema(const mcap::SchemaPtr schema, gp::SimpleDescriptorDatabase *prot
         {
             if (!protoDb->Add(file))
             {
-                std::cerr << "failed to add definition " << file.name() << "to protoDB" << std::endl;
                 return false;
             }
         }
@@ -52,8 +50,6 @@ int main(int argc, char **argv)
         const auto res = reader.open(inputFilename);
         if (!res.ok())
         {
-            std::cerr << "Failed to open " << inputFilename << " for reading: " << res.message
-                      << std::endl;
             return 1;
         }
     }
