@@ -36,7 +36,7 @@ bool LoadSchema(const mcap::SchemaPtr schema, gp::SimpleDescriptorDatabase *prot
 
 int main(int argc, char **argv) {
 
-    Socket socket("127.0.0.1", 8080);
+    Socket socket(DEFAULT_IP, DEFAULT_PORT);
 
     const char *inputFilename;
     if (argc != 2) {
