@@ -24,7 +24,7 @@ int main() {
         if (socket.receive(received_message)) {
             const gp::Descriptor* descriptor = protoPool.FindMessageTypeByName("mcu_pedal_readings");
             if (descriptor == nullptr) {
-                std::cerr << "Descriptor not found for message" << std::endl;
+                std::cerr << "Error: Message descriptor is null" << std::endl;
                 continue;
             }
 
