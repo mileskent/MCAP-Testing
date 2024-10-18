@@ -14,12 +14,7 @@ Socket::Socket(std::string server_ip, uint16_t port){
 	sAddr.sin_port = htons(port);
 }
 
-bool Socket::send(data::info message, bool returning){
-	std::string serialized;
-	if(!message.SerializeToString(&serialized)){
-		return false;
-	}
-
+bool Socket::send(const std::string& serialized, bool returning){
 	if(returning){
 		if (sendto(fd, serialized.data(), serialized.size(), 0, (struct sockaddr *)&remaddr, sizeof(sAddr)) < 0){
 			return false;
@@ -34,25 +29,24 @@ bool Socket::send(data::info message, bool returning){
 	return true;
 }
 
-bool Socket::receive(data::info& message){
+bool Socket::receive(std::string& serialized){
 	const int bufferSize = 1024;
-	socklen_t addrlen = sizeof(remaddr);      
+    socklen_t addrlen = sizeof(remaddr);
 
-	unsigned char buf[bufferSize];  
+    unsigned char buf[bufferSize];  
 
-	int recvlen = recvfrom(fd, buf, bufferSize, 0, (struct sockaddr *)&remaddr, &addrlen);
-	if(recvlen < 0){
-		return false;
-	} else {
-		std::cout << "recvlen: "<< recvlen << std::endl;
-	}
+    int recvlen = recvfrom(fd, buf, bufferSize, 0, (struct sockaddr *)&remaddr, &addrlen);
+    if(recvlen < 0){
+        return false;
+    } else {
+        std::cout << "recvlen: "<< recvlen << std::endl;
+    }
 
-	if (!message.ParseFromArray(buf, recvlen)) {
-		return false;
-	}
-
-	return true;
+    serialized.assign(reinterpret_cast<char*>(buf), recvlen);
+    
+    return true;
 }
+
 
 void Socket::close(){
 	::close(fd);

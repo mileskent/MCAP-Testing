@@ -23,8 +23,8 @@ public:
     Socket (std::string server_ip, uint16_t port);
 
     void close();
-    bool send (data::info message, bool returning);
-    bool receive (data::info& message);
+    bool send (const std::string&, bool returning);
+    bool receive (std::string&);
     bool bind();
 };
 
