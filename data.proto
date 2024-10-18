@@ -1,6 +1,0 @@
-syntax = "proto3";
-package data;
-
-message info {
-    optional string sender_name = 1;
-}

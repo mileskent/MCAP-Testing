@@ -7,16 +7,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 find_package(Protobuf REQUIRED)
 
-# NEEDED FOR JUST MCAP
 find_library(LZ4_LIBRARY lz4 REQUIRED)
 find_library(ZSTD_LIBRARY zstd REQUIRED)
-
 
 add_executable(test_mcap_data_sim src/test_mcap_data_sim.cpp)
 
 target_include_directories(test_mcap_data_sim PRIVATE ${CMAKE_SOURCE_DIR}/mcap)
 
-# Manually specify where Abseil libraries are located (usually installed system-wide in /usr/lib)
 find_library(ABSL_LOG_INTERNAL_CHECK_OP absl_log_internal_check_op REQUIRED)
 find_library(ABSL_LOG_SEVERITY absl_log_severity REQUIRED)
 find_library(ABSL_LOG_INTERNAL_MESSAGE absl_log_internal_message REQUIRED)
@@ -36,26 +33,14 @@ target_compile_definitions(test_mcap_data_sim PRIVATE MCAP_IMPLEMENTATION)
 
 install(TARGETS test_mcap_data_sim DESTINATION bin)
 
-# FOR JUST PROTO
 add_library(socket src/socket.cpp)
-# add_library(data STATIC src/data.pb.cc)
 
 target_include_directories(socket PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:include>"
 )
-# target_include_directories(data PUBLIC
-#     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-#     "$<INSTALL_INTERFACE:include>"
-# )
-
-# target_link_libraries(data PUBLIC protobuf::libprotobuf)
-# target_link_libraries(socket PUBLIC data)
 
 add_executable(server src/server.cpp)
-target_link_libraries(server PUBLIC socket)
-
-# add_executable(client src/client.cpp )
-# target_link_libraries(client PUBLIC socket)
+target_link_libraries(server PUBLIC socket protobuf::libprotobuf) 
 
 install(TARGETS server DESTINATION bin)
