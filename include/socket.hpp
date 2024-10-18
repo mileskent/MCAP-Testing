@@ -1,5 +1,5 @@
-#ifndef HUB_HPP 
-#define HUB_HPP 
+#ifndef SOCKET_HPP 
+#define SOCKET_HPP 
 
 #include <string>
 #include <sys/types.h>
@@ -8,7 +8,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <stdexcept>
-#include "data.pb.h"
+// #include "data.pb.h"
 
 static const std::string DEFAULT_IP = "127.0.0.1";
 static const uint16_t DEFAULT_PORT = 1153;

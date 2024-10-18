@@ -30,6 +30,7 @@ target_link_libraries(test_mcap_data_sim PUBLIC
 target_link_libraries(test_mcap_data_sim PRIVATE ${ABSL_LOG_INTERNAL_CHECK_OP} ${ABSL_LOG_SEVERITY} ${ABSL_LOG_INTERNAL_MESSAGE} ${ABSL_BASE} ${ABSL_STRINGS})
 
 target_link_libraries(test_mcap_data_sim PRIVATE ${LZ4_LIBRARY} ${ZSTD_LIBRARY})
+target_link_libraries(test_mcap_data_sim PUBLIC socket)
 
 target_compile_definitions(test_mcap_data_sim PRIVATE MCAP_IMPLEMENTATION)
 
@@ -37,24 +38,24 @@ install(TARGETS test_mcap_data_sim DESTINATION bin)
 
 # FOR JUST PROTO
 add_library(socket src/socket.cpp)
-add_library(data STATIC src/data.pb.cc)
+# add_library(data STATIC src/data.pb.cc)
 
 target_include_directories(socket PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
     "$<INSTALL_INTERFACE:include>"
 )
-target_include_directories(data PUBLIC
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-    "$<INSTALL_INTERFACE:include>"
-)
+# target_include_directories(data PUBLIC
+#     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+#     "$<INSTALL_INTERFACE:include>"
+# )
 
-target_link_libraries(data PUBLIC protobuf::libprotobuf)
-target_link_libraries(socket PUBLIC data)
+# target_link_libraries(data PUBLIC protobuf::libprotobuf)
+# target_link_libraries(socket PUBLIC data)
 
 add_executable(server src/server.cpp)
 target_link_libraries(server PUBLIC socket)
 
-add_executable(client src/client.cpp )
-target_link_libraries(client PUBLIC socket)
+# add_executable(client src/client.cpp )
+# target_link_libraries(client PUBLIC socket)
 
-install(TARGETS server client DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(TARGETS server DESTINATION bin)
