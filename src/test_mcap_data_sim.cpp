@@ -48,8 +48,7 @@ int main(int argc, char **argv) {
 
     mcap::McapReader reader; {
         const auto res = reader.open(inputFilename);
-        if (!res.ok())
-        {
+        if (!res.ok()) {
             return 1;
         }
     }
@@ -58,6 +57,8 @@ int main(int argc, char **argv) {
     gp::SimpleDescriptorDatabase protoDb;
     gp::DescriptorPool protoPool(&protoDb);
     gp::DynamicMessageFactory protoFactory(&protoPool);
+
+    int foo = 0;
 
     for (auto it = messageView.begin(); it != messageView.end(); it++) {
         // skip any non-protobuf-encoded messages.
@@ -93,16 +94,30 @@ int main(int argc, char **argv) {
         }
 
         std::vector<const gp::FieldDescriptor *> fields;
-        message->GetReflection()->ListFields(*message, &fields);
+        const gp::Reflection* reflection = message->GetReflection();
+        reflection->ListFields(*message, &fields);
+
+        if (it->channel->topic != "mcu_pedal_readings_data") {
+            continue;
+        }
+        std::cout << "----------------------------\n";
         std::cout << "Message channel topic: " << it->channel->topic <<
             "\nMessage schema name: " << it->schema->name << 
             "\nMessage Log Time: " << it->message.logTime << std::endl;
         std::cout << "FIELD NAMES\n";
 
+
+
         for (const auto field : fields) {
             std::cout << field->name() << "\n";
+            float value = reflection->GetFloat(*message, field);
+            std::cout << "mechanical_brake_percent_float value: " << value << "\n";
         }
-        break;
+        std::cout << "----------------------------\n\n";
+    
+        foo++;
+        if (foo > 100) break;
+
     }
     reader.close();
     return 0;
