@@ -37,8 +37,11 @@ bool LoadSchema(const mcap::SchemaPtr schema, gp::SimpleDescriptorDatabase *prot
 int main(int argc, char **argv) {
 
     Socket socket(DEFAULT_IP, DEFAULT_PORT);
-
+    
+    // stuff that will be passed in later on, but is hardcoded now
     const char *inputFilename;
+    const std::string channelName = "mcu_error_states_data";
+
     if (argc != 2) {
 
         inputFilename = "testdata.mcap";
@@ -71,6 +74,14 @@ int main(int argc, char **argv) {
             return 1;
         }
 
+        // TEMP FOR TESTING SPECIFIC CHANNEL
+        if (it->channel->topic != channelName) {
+            continue;
+        }
+
+        // DEBUG OUT
+        std::cout << "Channel Topic Name: " << it->channel->topic << std::endl; 
+
         const gp::Descriptor *descriptor = protoPool.FindMessageTypeByName(it->schema->name);
         if (descriptor == nullptr) {
             if (!LoadSchema(it->schema, &protoDb)) {
@@ -91,6 +102,9 @@ int main(int argc, char **argv) {
             reader.close();
             return 1;
         }
+
+        std::cout << "Message before serialization:" << std::endl;
+        std::cout << message->DebugString() << std::endl;
 
         std::string serializedMessage;
         if (!message->SerializeToString(&serializedMessage)) {
