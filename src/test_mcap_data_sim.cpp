@@ -1,17 +1,16 @@
-#define MCAP_IMPLEMENTATION
+// #define MCAP_IMPLEMENTATION
 #include <google/protobuf/descriptor.pb.h>
 #include <google/protobuf/descriptor_database.h>
 #include <google/protobuf/dynamic_message.h>
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/reflection.h>
 #include <google/protobuf/message.h>
-
 #include "../mcap/reader.hpp"
 #include <memory>
 #include <iostream>
 #include <vector>
-
 #include "socket.hpp"
+#include "helper.hpp"
 
 namespace gp = google::protobuf;
 
@@ -32,7 +31,6 @@ bool LoadSchema(const mcap::SchemaPtr schema, gp::SimpleDescriptorDatabase *prot
     }
     return true;
 }
-
 
 int main(int argc, char **argv) {
 

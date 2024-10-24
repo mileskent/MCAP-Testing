@@ -13,6 +13,7 @@ find_library(ZSTD_LIBRARY zstd REQUIRED)
 add_executable(test_mcap_data_sim src/test_mcap_data_sim.cpp)
 
 target_include_directories(test_mcap_data_sim PRIVATE ${CMAKE_SOURCE_DIR}/mcap)
+target_include_directories(test_mcap_data_sim PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 find_library(ABSL_LOG_INTERNAL_CHECK_OP absl_log_internal_check_op REQUIRED)
 find_library(ABSL_LOG_SEVERITY absl_log_severity REQUIRED)
@@ -31,6 +32,9 @@ target_link_libraries(test_mcap_data_sim PUBLIC socket)
 
 target_compile_definitions(test_mcap_data_sim PRIVATE MCAP_IMPLEMENTATION)
 
+# presumably we duplicate this to give the server deps
+target_compile_definitions(test_mcap_data_sim PRIVATE MCAP_IMPLEMENTATION)
+
 install(TARGETS test_mcap_data_sim DESTINATION bin)
 
 add_library(socket src/socket.cpp)
@@ -41,6 +45,10 @@ target_include_directories(socket PUBLIC
 )
 
 add_executable(server src/server.cpp)
+
+target_include_directories(server PRIVATE ${CMAKE_SOURCE_DIR}/mcap)
+target_include_directories(server PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
 target_link_libraries(server PUBLIC socket protobuf::libprotobuf) 
 
 install(TARGETS server DESTINATION bin)
