@@ -1,10 +1,9 @@
-#ifdef HELPER_HPP
+#ifndef HELPER_HPP
 #define HELPER_HPP
 
-#include <iostream>
-
-void test() {
-    std::cout << "Helper in scope\n";
-}
+class Helper {
+public:
+	static void test(void);
+};
 
 #endif
