@@ -10,7 +10,6 @@
 #include <iostream>
 #include <vector>
 #include "socket.hpp"
-#include "helper.hpp"
 
 namespace gp = google::protobuf;
 
@@ -33,7 +32,6 @@ bool LoadSchema(const mcap::SchemaPtr schema, gp::SimpleDescriptorDatabase *prot
 }
 
 int main(int argc, char **argv) {
-
     Socket socket(DEFAULT_IP, DEFAULT_PORT);
     
     // stuff that will be passed in later on, but is hardcoded now
@@ -115,7 +113,7 @@ int main(int argc, char **argv) {
         socket.send(serializedMessage, false);
 
         foo++;
-        if (foo > 100) break;
+        if (foo > 10) break;
     }
 
     reader.close();
