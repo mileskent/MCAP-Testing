@@ -17,6 +17,7 @@ int main() {
 
     const char *inputFilename = "testdata.mcap"; // TODO: shouldn't be hardcoded
     const std::string channelName = "mcu_error_states_data"; // TODO shouldn't be hardcoded
+    const std::string schemaName = "mcu_error_states"; // TODO shouldn't be hardcoded
 
     mcap::McapReader reader;
     const auto res = reader.open(inputFilename);
@@ -34,7 +35,7 @@ int main() {
     while (true) {
         std::string received_message;
         if (socket.receive(received_message)) {
-            const gp::Descriptor* descriptor = protoPool.FindMessageTypeByName(channelName);
+            const gp::Descriptor* descriptor = protoPool.FindMessageTypeByName(schemaName);
             if (descriptor == nullptr) {
                 std::cerr << "Error: Message descriptor is null" << std::endl;
                 continue;

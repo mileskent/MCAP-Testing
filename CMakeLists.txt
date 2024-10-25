@@ -21,25 +21,25 @@ target_include_directories(socket PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_include_directories(helper PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 # client
-add_executable(test_mcap_data_sim src/test_mcap_data_sim.cpp)
-target_include_directories(test_mcap_data_sim PRIVATE ${CMAKE_SOURCE_DIR}/mcap)
-target_include_directories(test_mcap_data_sim PRIVATE ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(test_mcap_data_sim PUBLIC
+add_executable(client src/client.cpp)
+target_include_directories(client PRIVATE ${CMAKE_SOURCE_DIR}/mcap)
+target_include_directories(client PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_link_libraries(client PUBLIC
     protobuf::libprotobuf
     socket
     helper
     ${LZ4_LIBRARY}
     ${ZSTD_LIBRARY}
 )
-target_link_libraries(test_mcap_data_sim PRIVATE
+target_link_libraries(client PRIVATE
     ${ABSL_LOG_INTERNAL_CHECK_OP}
     ${ABSL_LOG_SEVERITY}
     ${ABSL_LOG_INTERNAL_MESSAGE}
     ${ABSL_BASE}
     ${ABSL_STRINGS}
 )
-target_compile_definitions(test_mcap_data_sim PRIVATE MCAP_IMPLEMENTATION)
-install(TARGETS test_mcap_data_sim DESTINATION bin)
+target_compile_definitions(client PRIVATE MCAP_IMPLEMENTATION)
+install(TARGETS client DESTINATION bin)
 
 # server
 add_executable(server src/server.cpp)

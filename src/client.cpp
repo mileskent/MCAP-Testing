@@ -56,7 +56,9 @@ int main(int argc, char **argv) {
         }
 
         // DEBUG OUT
-        std::cout << "Channel Topic Name: " << it->channel->topic << std::endl; 
+        std::cout << "DEBUG:\n";
+        std::cout << "Channel Topic: " << it->channel->topic << std::endl; 
+        std::cout << "Schema Name: " << it->schema->name<< std::endl; 
 
         const gp::Descriptor *descriptor = protoPool.FindMessageTypeByName(it->schema->name);
         if (descriptor == nullptr) {
