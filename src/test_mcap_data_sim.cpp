@@ -20,7 +20,6 @@ int main(int argc, char **argv) {
     const std::string channelName = "mcu_error_states_data";
 
     if (argc != 2) {
-
         inputFilename = "testdata.mcap";
     } else {
         inputFilename = argv[1];

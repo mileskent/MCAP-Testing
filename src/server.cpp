@@ -9,38 +9,26 @@
 #include <iostream>
 #include <vector>
 #include "socket.hpp"
-
-namespace gp = google::protobuf;
-
-// Loads the FileDescriptorSet from a protobuf schema definition into a SimpleDescriptorDatabase.
-bool LoadSchema(const mcap::SchemaPtr schema, gp::SimpleDescriptorDatabase *protoDb) {
-    gp::FileDescriptorSet fdSet;
-    if (!fdSet.ParseFromArray(schema->data.data(), static_cast<int>(schema->data.size()))) {
-        return false;
-    }
-    gp::FileDescriptorProto unused;
-    for (int i = 0; i < fdSet.file_size(); ++i) {
-        const auto &file = fdSet.file(i);
-        if (!protoDb->FindFileByName(file.name(), &unused)) {
-            if (!protoDb->Add(file)) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
+#include "helper.hpp"
 
 int main() {
     Socket socket(DEFAULT_IP, DEFAULT_PORT);
     socket.bind();
 
-    // TEMP Const
-    const std::string channelName = "mcu_error_states_data";
+    const char *inputFilename = "testdata.mcap"; // TODO: shouldn't be hardcoded
+    const std::string channelName = "mcu_error_states_data"; // TODO shouldn't be hardcoded
 
-    // Assuming you already have the Protobuf Descriptor setup
+    mcap::McapReader reader;
+    const auto res = reader.open(inputFilename);
+    if (!res.ok()) {
+        return 1;
+    }
+
+    auto messageView = reader.readMessages();
     gp::SimpleDescriptorDatabase protoDb;
     gp::DescriptorPool protoPool(&protoDb);
     gp::DynamicMessageFactory protoFactory(&protoPool);
+    reader.close();
 
     // Server Loop
     while (true) {
